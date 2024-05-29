@@ -1,6 +1,6 @@
-import React from "react";
-import { useCompanyData } from "../contexts/CompanyDataContext";
-import { useEmployeeData } from "../contexts/EmployeeDataContext";
+import { ChangeEvent } from "react";
+import { CompanyData, useCompanyData } from "../contexts/CompanyDataContext";
+import { EmployeeData, useEmployeeData } from "../contexts/EmployeeDataContext";
 
 interface InputType {
   label: string;
@@ -8,23 +8,20 @@ interface InputType {
   name: string;
   small: boolean;
   index: number;
-  error: string;
+  error: string | undefined;
 }
 
 const InputField = ({ label, type, name, small, index, error }: InputType) => {
   const { companyData, setCompanyData } = useCompanyData();
   const { employeeData, setEmployeeData } = useEmployeeData();
 
-  const handleOnChange = (e) => {
-    if (name === "cv" && e.target.files.length > 0) {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && name === "cv" && e.target.files.length > 0) {
       const file = e.target.files[0];
       const reader = new FileReader();
-
+      console.log(employeeData);
       reader.onload = (event) => {
-        setEmployeeData({
-          ...employeeData,
-          [index]: { ...employeeData[index], [name]: event.target.result },
-        });
+        setEmployeeData({ ...employeeData, [index]: { ...employeeData[index], [name]: event?.target?.result } });
       };
 
       reader.readAsDataURL(file);
@@ -44,9 +41,11 @@ const InputField = ({ label, type, name, small, index, error }: InputType) => {
       return undefined;
     }
     if (small) {
-      return employeeData[index]?.[name] || "";
+      const data = employeeData[index]?.[name as keyof EmployeeData];
+      return typeof data === "string" || typeof data === "number" ? data : "";
     }
-    return companyData[name] || "";
+    const data = companyData[name as keyof CompanyData];
+    return typeof data === "string" || typeof data === "number" ? data : "";
   };
 
   return (

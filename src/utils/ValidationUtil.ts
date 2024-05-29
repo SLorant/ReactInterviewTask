@@ -1,26 +1,29 @@
 import { Dispatch, SetStateAction } from "react";
-import { CompanyData } from "../CompanyDataContext";
-import { cleanedEmpls } from "./cleanedEmplsContext";
+import { CompanyData } from "../contexts/CompanyDataContext";
+import { EmployeeData } from "../contexts/EmployeeDataContext";
+import { EmployeeErrors, Errors } from "../App";
 
 interface ValidationProps {
   companyData: CompanyData;
-  cleanedEmpls: cleanedEmpls;
-  setErrors: Dispatch<SetStateAction<object>>;
-  setEmplErrors: Dispatch<SetStateAction<object>>;
+  cleanedEmpls: { [key: number]: EmployeeData };
+  setErrors: Dispatch<SetStateAction<Errors>>;
+  setEmplErrors: Dispatch<SetStateAction<EmployeeErrors>>;
 }
 
 //Email validation with regex
 const validateEmail = (email: string): boolean => {
-  return (
-    String(email)
-      .toLowerCase()
-      .match(/^\S+@\S+\.\S+$/)?.length > 0
-  );
+  const matches = String(email)
+    .toLowerCase()
+    .match(/^\S+@\S+\.\S+$/);
+
+  if (matches) return matches?.length > 0;
+  return false;
 };
 
 const validate = ({ companyData, cleanedEmpls, setErrors, setEmplErrors }: ValidationProps) => {
-  const companyErrors = {};
-  const employeeErrors = {};
+  const companyErrors: Errors = {};
+  const employeeErrors: EmployeeErrors = {};
+  const employeeCount = Number(companyData.employees);
 
   if (!companyData.name) {
     companyErrors.name = "Name is required.";
@@ -32,11 +35,11 @@ const validate = ({ companyData, cleanedEmpls, setErrors, setEmplErrors }: Valid
   }
   if (!companyData.employees) {
     companyErrors.employees = "Number of Employees is required.";
-  } else if (companyData.employees < 0 || companyData.employees > 100) {
+  } else if (employeeCount < 0 || employeeCount > 100) {
     companyErrors.employees = "Employee count out of range (0-100).";
   }
 
-  for (let i = 0; i < companyData.employees; i++) {
+  for (let i = 0; i < employeeCount; i++) {
     if (!cleanedEmpls[i]?.name) {
       employeeErrors[i] = { ...employeeErrors[i], name: "Name is required." };
     }
@@ -50,7 +53,7 @@ const validate = ({ companyData, cleanedEmpls, setErrors, setEmplErrors }: Valid
     }
     if (!cleanedEmpls[i]?.age) {
       employeeErrors[i] = { ...employeeErrors[i], age: "Age is required." };
-    } else if (!parseInt(cleanedEmpls[i]?.age)) {
+    } else if (!Number(cleanedEmpls[i]?.age)) {
       employeeErrors[i] = { ...employeeErrors[i], age: "Age must be whole." };
     } else if (cleanedEmpls[i]?.age < 18) {
       employeeErrors[i] = { ...employeeErrors[i], age: "Must be 18 at least." };

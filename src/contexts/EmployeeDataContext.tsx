@@ -1,20 +1,24 @@
-import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
 
 export interface EmployeeData {
   name: string;
   email: string;
   title: string;
-  age: boolean;
+  age: number;
+  cv?: string | ArrayBuffer | null;
 }
 
 interface EmployeeDataContextType {
-  employeeData: EmployeeData;
-  setEmployeeData: Dispatch<SetStateAction<EmployeeData>>;
+  employeeData: { [key: number]: EmployeeData };
+  setEmployeeData: Dispatch<SetStateAction<{ [key: number]: EmployeeData }>>;
 }
-const EmployeeDataContext = createContext<EmployeeDataContextType>({});
+const EmployeeDataContext = createContext<EmployeeDataContextType>({
+  employeeData: {},
+  setEmployeeData: () => {},
+});
 
-export const EmployeeDataProvider = ({ children }) => {
-  const [employeeData, setEmployeeData] = useState<EmployeeData>({});
+export const EmployeeDataProvider = ({ children }: { children: ReactNode }) => {
+  const [employeeData, setEmployeeData] = useState<{ [key: number]: EmployeeData }>({});
 
   return (
     <EmployeeDataContext.Provider value={{ employeeData, setEmployeeData }}>{children}</EmployeeDataContext.Provider>

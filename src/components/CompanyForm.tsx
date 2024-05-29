@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import InputField from "./InputField";
-import { useCompanyData } from "../contexts/CompanyDataContext";
-import { useEmployeeData } from "../contexts/EmployeeDataContext";
+import { CompanyData, useCompanyData } from "../contexts/CompanyDataContext";
+import { EmployeeData, useEmployeeData } from "../contexts/EmployeeDataContext";
 import validate from "../utils/ValidationUtil";
 import { EmployeeErrors, Errors } from "../App";
 
@@ -16,7 +16,7 @@ const CompanyForm = ({ errors, setErrors, setEmplErrors }: CompanyFormProps) => 
   const { employeeData } = useEmployeeData();
   const [json, setJson] = useState("");
   const [modal, setModal] = useState(false);
-  const ref = useRef();
+  const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (modal) {
@@ -30,14 +30,20 @@ const CompanyForm = ({ errors, setErrors, setEmplErrors }: CompanyFormProps) => 
     const employeeCount = Object.keys(employeeData).length;
     let i = employeeCount;
     let cleanedEmpls = employeeData;
+    //const cleanedEmpls = employeeData.slice(0, employeeCount);
     // If there are more employees in the employee form data, than in the company data,
     // Delete the ones not needed
-    while (i > companyData.employees) {
-      delete employeeData[i - 1];
+    while (i > Number(companyData.employees)) {
+      delete cleanedEmpls[i - 1];
       cleanedEmpls = employeeData;
       i--;
     }
     const isValid = validate({ companyData, cleanedEmpls, setErrors, setEmplErrors });
+
+    //To make sure that the age is an integer
+    Object.values(cleanedEmpls).map((emp) => {
+      emp.age = Math.floor(emp.age);
+    });
 
     if (isValid) {
       setJson(JSON.stringify({ Company: companyData, Employees: cleanedEmpls }, null, "  "));
@@ -47,7 +53,7 @@ const CompanyForm = ({ errors, setErrors, setEmplErrors }: CompanyFormProps) => 
   };
 
   //Submit to fictional endpoint, will get error because the endpoint doesn't exist
-  const submitData = async (companyData: CompanyData, employeeData: EmployeeData) => {
+  const submitData = async (companyData: CompanyData, employeeData: { [key: number]: EmployeeData }) => {
     const response = await fetch("https://some-random-endpoint.com/api/data", {
       method: "POST",
       headers: {
@@ -70,9 +76,16 @@ const CompanyForm = ({ errors, setErrors, setEmplErrors }: CompanyFormProps) => 
       <div className="h-3/4 hidden lg:block lg:absolute -right-24 top-16 border-r-2 border-zinc-600"></div>
       <h1 className="mb-8 text-center text-3xl sm:text-5xl">Company form</h1>
       <div className="flex flex-col gap-4 justify-center items-center">
-        <InputField label={"Name"} type={"text"} name="name" error={errors.name} />
-        <InputField label={"Email"} type={"email"} name="email" error={errors.email} />
-        <InputField label={"Number of Employees"} type={"number"} name="employees" error={errors.employees} />
+        <InputField label={"Name"} type={"text"} name="name" error={errors.name} small={false} index={0} />
+        <InputField label={"Email"} type={"email"} name="email" error={errors.email} small={false} index={0} />
+        <InputField
+          label={"Number of Employees"}
+          type={"number"}
+          name="employees"
+          error={errors.employees}
+          small={false}
+          index={0}
+        />
         <div className="flex flex-col ">
           <label className="text-xl mb-1">Description</label>
           <textarea

@@ -1,10 +1,10 @@
 import InputField from "./InputField";
 import { useCompanyData } from "../contexts/CompanyDataContext";
 import { useEmployeeData } from "../contexts/EmployeeDataContext";
-import { Errors } from "../App";
+import { EmployeeErrors } from "../App";
 
 interface EmployeeFormProps {
-  errors: Errors;
+  errors: EmployeeErrors;
 }
 const EmployeeForm = ({ errors }: EmployeeFormProps) => {
   const { companyData } = useCompanyData();
@@ -41,7 +41,7 @@ const EmployeeForm = ({ errors }: EmployeeFormProps) => {
                 <p className="text-sm ml-2 text-red-400">{errors[i]?.title}</p>
               </div>
               <InputField label={"Age"} type={"number"} name="age" small index={i} error={errors[i]?.age} />
-              <InputField label={"CV"} type={"file"} name="cv" small index={i} error={errors[i]?.cv} />
+              <InputField label={"CV"} type={"file"} name="cv" small index={i} error={""} />
             </form>
           </div>
         ))}
