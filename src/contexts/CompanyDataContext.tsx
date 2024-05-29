@@ -1,13 +1,17 @@
-import { createContext, useContext, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 
-interface CompanyData {
+export interface CompanyData {
   name: string;
   email: string;
   employees: string;
   desc: string;
 }
 
-const CompanyDataContext = createContext({});
+interface CompanyDataContext {
+  companyData: CompanyData;
+  setCompanyData: Dispatch<SetStateAction<CompanyData>>;
+}
+const CompanyDataContext = createContext<CompanyDataContext>({});
 
 export const CompanyDataProvider = ({ children }) => {
   const [companyData, setCompanyData] = useState<CompanyData>({});
