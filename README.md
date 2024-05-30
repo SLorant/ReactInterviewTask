@@ -11,4 +11,25 @@ The project is hosted with Firebase: https://job-interview-exercise.web.app/
 - Contexts hold the employee and company data itself, so all of the form components can access them.
 - There are two utils: ValidationUtil for form validation, and submitDataUtil for the POST API request.
 
+## Installation
+
+1. Clone this repository
+
+```
+git clone https://github.com/SLorant/ReactInterviewTask.git
+```
+
+2. Navigate to project directory and install dependencies using npm:
+
+```
+cd ReactInterviewTask
+npm install
+```
+
+3. Start the development server:
+
+```
+npm run dev
+```
+
 Made by Lorant Sutus.
