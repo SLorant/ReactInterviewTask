@@ -1,30 +1,14 @@
-# React + TypeScript + Vite
+# Documentation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The task was to create a form for company and employee data. The project was made with React, Typescript, and Tailwind.<br />
+The user can add employees up to a hundred, and the form will dynamically render the employee sections. <br />
+After the data passes all validations, it gets sent to a fictional endpoint, and the sent data is shown on the screen in JSON format.<br />
+The project is hosted with Firebase: https://job-interview-exercise.web.app/
 
-Currently, two official plugins are available:
+## Components
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Form components in the components folder handle the UI of the app, and process the incoming data.
+- Contexts hold the employee and company data itself, so all of the form components can access them.
+- There are two utils: ValidationUtil for form validation, and submitDataUtil for the POST API request.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Made by Lorant Sutus.

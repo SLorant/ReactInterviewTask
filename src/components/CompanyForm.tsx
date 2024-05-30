@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import InputField from "./InputField";
-import { CompanyData, useCompanyData } from "../contexts/CompanyDataContext";
-import { EmployeeData, useEmployeeData } from "../contexts/EmployeeDataContext";
+import { useCompanyData } from "../contexts/CompanyDataContext";
+import { useEmployeeData } from "../contexts/EmployeeDataContext";
 import validate from "../utils/ValidationUtil";
 import { EmployeeErrors, Errors } from "../App";
+import submitData from "../utils/submitDataUtil";
 
 interface CompanyFormProps {
   errors: Errors;
@@ -49,25 +50,6 @@ const CompanyForm = ({ errors, setErrors, setEmplErrors }: CompanyFormProps) => 
       setJson(JSON.stringify({ Company: companyData, Employees: cleanedEmpls }, null, "  "));
       submitData(companyData, cleanedEmpls);
       setModal(true);
-    }
-  };
-
-  //Submit to fictional endpoint, will get error because the endpoint doesn't exist
-  const submitData = async (companyData: CompanyData, employeeData: { [key: number]: EmployeeData }) => {
-    const response = await fetch("https://some-random-endpoint.com/api/data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ Company: companyData, Employees: employeeData }),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to post data:", response.statusText);
-    } else {
-      // This won't fire
-      const data = await response.json();
-      console.log("Data successfully submitted:", data);
     }
   };
 

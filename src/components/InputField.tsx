@@ -19,7 +19,6 @@ const InputField = ({ label, type, name, small, index, error }: InputType) => {
     if (e.target.files && name === "cv" && e.target.files.length > 0) {
       const file = e.target.files[0];
       const reader = new FileReader();
-      console.log(employeeData);
       reader.onload = (event) => {
         setEmployeeData({ ...employeeData, [index]: { ...employeeData[index], [name]: event?.target?.result } });
       };
